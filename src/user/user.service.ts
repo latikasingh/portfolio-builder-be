@@ -137,15 +137,14 @@ export class UserService {
     files?: any,
   ): Promise<{ user: User }> {
     let data = updateData;
-    if (files.profileImage && files.profileImage.length > 0) {
+    if (files?.profileImage && files?.profileImage?.length > 0) {
       const profileImageUrl = await this.cloudinaryService.uploadImage(
         files.profileImage[0],
       );
       updateData.profileImage = profileImageUrl;
     }
-
     // Process coverImage
-    if (files.coverImage && files.coverImage.length > 0) {
+    if (files?.coverImage && files?.coverImage?.length > 0) {
       const coverImageUrl = await this.cloudinaryService.uploadImage(
         files.coverImage[0],
       );

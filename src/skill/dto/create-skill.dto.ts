@@ -3,16 +3,12 @@ import {
   IsNotEmpty,
   IsArray,
   ValidateNested,
-  IsMongoId,
+  ArrayNotEmpty,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { UserSkillDataDto } from './skill-data.sto';
 
 export class CreateUserSkillDto {
-  @IsMongoId()
-  @IsNotEmpty()
-  user: string;
-
   @IsString()
   @IsNotEmpty()
   description: string;
@@ -20,5 +16,6 @@ export class CreateUserSkillDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => UserSkillDataDto)
+  @ArrayNotEmpty()
   skills: UserSkillDataDto[];
 }

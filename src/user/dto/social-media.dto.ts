@@ -1,12 +1,21 @@
-import { IsNotEmpty, IsOptional, IsString, IsUrl } from 'class-validator';
+import {
+  IsEmpty,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUrl,
+  ValidateIf,
+} from 'class-validator';
 
 export class SocialMediaDto {
   @IsString()
   @IsNotEmpty()
   name: string;
 
+  @ValidateIf((o) => o.link !== '')
   @IsUrl()
-  @IsNotEmpty()
+  @IsString()
+  @IsOptional()
   link: string;
 
   @IsString()

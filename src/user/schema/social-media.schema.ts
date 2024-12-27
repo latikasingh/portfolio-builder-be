@@ -1,11 +1,10 @@
-import { Prop, Schema } from '@nestjs/mongoose';
-import { IsNotEmpty, IsString, IsUrl } from 'class-validator';
+import { Prop } from '@nestjs/mongoose';
 
 export class SocialMediaSchema {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ required: true })
+  @Prop()
   link: string;
 
   @Prop()

@@ -20,6 +20,7 @@ export class UpdateUserDto {
   @IsNotEmpty()
   lastName: string;
 
+  @IsString({ each: true })
   @IsArray()
   @ArrayNotEmpty()
   tags: string[];
