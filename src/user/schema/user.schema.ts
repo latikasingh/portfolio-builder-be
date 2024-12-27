@@ -19,16 +19,22 @@ export class User extends Document {
   @Prop({ required: true })
   lastName: string;
 
-  @Prop({ type: [String] })
+  @Prop({ type: [String], default: ['Photographer', 'Freelance', 'Developer'] })
   tags: string[];
 
   @Prop({ type: [SocialMediaSchema], required: true })
   socialMedia: SocialMediaSchema[];
 
-  @Prop()
+  @Prop({
+    default:
+      'https://res.cloudinary.com/drp14sj0v/image/upload/v1735281668/Cover_Image.jpg',
+  })
   coverImage?: string;
 
-  @Prop()
+  @Prop({
+    default:
+      'https://res.cloudinary.com/drp14sj0v/image/upload/v1735281637/Profile_Image.png',
+  })
   profileImage?: string;
 }
 

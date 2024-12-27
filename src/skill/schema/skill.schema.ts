@@ -18,3 +18,23 @@ export class UserSkill extends Document {
 }
 
 export const UserSkillSchema = SchemaFactory.createForClass(UserSkill);
+
+UserSkillSchema.set('toJSON', {
+  virtuals: true,
+  transform: function (doc, ret) {
+    ret.id = ret._id;
+    delete ret._id;
+    delete ret.__v;
+    return ret;
+  },
+});
+
+UserSkillSchema.set('toObject', {
+  virtuals: true,
+  transform: function (doc, ret) {
+    ret.id = ret._id;
+    delete ret._id;
+    delete ret.__v;
+    return ret;
+  },
+});

@@ -40,9 +40,11 @@ export class UserAbout extends Document {
   @Prop({ default: 0 })
   happilyClient: number;
 
-  projects: number;
   @Prop({ default: 0 })
-  houseOfSupports: number;
+  projects: number;
+
+  @Prop({ default: 0 })
+  hoursOfSupports: number;
 
   @Prop({ default: 0 })
   team: number;

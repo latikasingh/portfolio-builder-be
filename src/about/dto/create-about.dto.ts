@@ -61,7 +61,7 @@ export class CreateUserAboutDto {
   projects?: number;
   @IsNumber()
   @IsOptional()
-  houseOfSupports?: number;
+  hoursOfSupports?: number;
 
   @IsNumber()
   @IsOptional()
