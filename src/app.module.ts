@@ -10,6 +10,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { SkillModule } from './skill/skill.module';
 import { AboutModule } from './about/about.module';
 import { ServicesModule } from './services/services.module';
+import { ProjectModule } from './project/project.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ServicesModule } from './services/services.module';
     ResumeModule,
     CloudinaryModule,
     ServicesModule,
+    ProjectModule,
   ],
   controllers: [AppController],
   providers: [AppService],
