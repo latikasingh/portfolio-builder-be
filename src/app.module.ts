@@ -5,8 +5,6 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from './user/user.module';
-import { AboutModule } from './about/about.module';
-import { SkillModule } from './skill/skill.module';
 
 @Module({
   imports: [
@@ -20,8 +18,6 @@ import { SkillModule } from './skill/skill.module';
     }),
     MongooseModule.forRoot(process.env.MONGODB_URL),
     UserModule,
-    AboutModule,
-    SkillModule,
   ],
   controllers: [AppController],
   providers: [AppService],

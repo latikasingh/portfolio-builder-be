@@ -35,16 +35,6 @@ export class UserAboutService {
     return { userAbout };
   }
 
-  // Method for get all UserAbout
-  async getAllUserAbout(): Promise<UserAbout[]> {
-    const userAbouts = await getAll(this.UserAboutModel);
-
-    if (!userAbouts || userAbouts.length === 0) {
-      throw new NotFoundException(ErrorMessage.USER_ABOUT_RECORDS_NOT_FOUND);
-    }
-    return userAbouts;
-  }
-
   // Method for upsert UserAbout
   async upSertUserAbout(
     userId: mongoose.Types.ObjectId,
