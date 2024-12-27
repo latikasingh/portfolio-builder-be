@@ -19,11 +19,13 @@ import {
 import { SignInUserDto } from './dto/sign-in.dto';
 import { ErrorMessage } from 'shared/error.constant';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private jwtService: JwtService,
+    private cloudinaryService: CloudinaryService,
     @InjectModel(User.name) private UserModel: mongoose.Model<User>,
   ) {}
 
@@ -132,9 +134,25 @@ export class UserService {
   async updateUser(
     id: mongoose.Types.ObjectId,
     updateData: UpdateUserDto,
+    files?: any,
   ): Promise<{ user: User }> {
-    console.log(updateData);
-    const user = await updateOne(this.UserModel, id, updateData);
+    let data = updateData;
+    if (files.profileImage && files.profileImage.length > 0) {
+      const profileImageUrl = await this.cloudinaryService.uploadImage(
+        files.profileImage[0],
+      );
+      updateData.profileImage = profileImageUrl;
+    }
+
+    // Process coverImage
+    if (files.coverImage && files.coverImage.length > 0) {
+      const coverImageUrl = await this.cloudinaryService.uploadImage(
+        files.coverImage[0],
+      );
+      updateData.coverImage = coverImageUrl;
+    }
+
+    const user = await updateOne(this.UserModel, id, data);
     if (!user) {
       throw new BadRequestException(ErrorMessage.USER_NOT_UPDATED);
     }

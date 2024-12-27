@@ -7,7 +7,9 @@ import {
   Patch,
   Post,
   Req,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { SignUpUserDto } from './dto/sign-up.dto';
 import { User } from './schema/user.schema';
@@ -17,6 +19,7 @@ import mongoose from 'mongoose';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'shared/auth/auth.gurd';
 import { ErrorMessage } from 'shared/error.constant';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 @Controller('user')
 export class UserController {
@@ -50,17 +53,27 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard)
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'profileImage', maxCount: 1 },
+      { name: 'coverImage', maxCount: 1 },
+    ]),
+  )
   @Patch(':id')
   async updateUser(
     @Req() req: any,
     @Body() updateData: UpdateUserDto,
     @Param('id') id: mongoose.Types.ObjectId,
+    @UploadedFiles()
+    files: {
+      profileImage?: any;
+      coverImage?: any;
+    },
   ): Promise<{ user: User }> {
     if (req.user.id !== id) {
       throw new BadRequestException(ErrorMessage.INVALID_ID);
     }
-
-    return await this.userService.updateUser(id, updateData);
+    return await this.userService.updateUser(id, updateData, files);
   }
 
   @UseGuards(AuthGuard)
