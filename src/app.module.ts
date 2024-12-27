@@ -7,6 +7,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from './user/user.module';
 import { ResumeModule } from './resume/resume.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { SkillModule } from './skill/skill.module';
+import { AboutModule } from './about/about.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
     }),
     MongooseModule.forRoot(process.env.MONGODB_URL),
     UserModule,
+    AboutModule,
+    SkillModule,
     ResumeModule,
     CloudinaryModule,
   ],
