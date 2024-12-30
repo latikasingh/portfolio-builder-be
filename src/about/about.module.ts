@@ -10,5 +10,6 @@ import { UserAboutSchema } from './schema/about.schema';
   ],
   controllers: [AboutController],
   providers: [UserAboutService],
+  exports: [UserAboutService],
 })
 export class AboutModule {}

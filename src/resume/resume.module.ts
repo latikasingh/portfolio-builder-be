@@ -12,5 +12,6 @@ import { UserResumeSchema } from './schema/resume.schema';
   ],
   controllers: [ResumeController],
   providers: [ResumeService],
+  exports: [ResumeService],
 })
 export class ResumeModule {}
