@@ -10,13 +10,6 @@ import mongoose from 'mongoose';
 @Injectable()
 export class AppService {
   constructor(
-    // @InjectModel(UserSkill.name)
-    // private readonly userSkillModel: Model<UserSkill>,
-    // @InjectModel(UserProject.name)
-    // private readonly userProjectModel: Model<UserProject>,
-    // @InjectModel(UserResume.name)
-    // private readonly userResumeModel: Model<UserResume>,
-
     private userService: UserService,
     private userAboutService: UserAboutService,
     private userSkillService: SkillService,
@@ -34,8 +27,8 @@ export class AppService {
       this.userService.getUserById(userId),
       this.userAboutService.getUserAboutById(userId),
       this.userSkillService.getUserSkillById(userId),
-      this.userResumeService.getUserResumeById(userId),
-      this.userProjectService.getUserProjectById(userId),
+      this.userResumeService.getUserResumesByUserIdForPortfolio(userId),
+      this.userProjectService.getUserProjectByUserId(userId),
       this.userServiceService.getUserServiceById(userId),
     ]);
     return { data: { ...user, about, skill, resume, project, service } };

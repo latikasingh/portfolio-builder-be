@@ -19,11 +19,11 @@ export class UserResume extends Document {
   @Prop({ type: [String], required: true })
   points: string[];
 
-  @Prop({ type: String, required: false })
+  @Prop({ type: String })
   startYear?: string;
 
   @Prop({ type: String })
-  endYear: string;
+  endYear?: string;
 }
 
 export const UserResumeSchema = SchemaFactory.createForClass(UserResume);

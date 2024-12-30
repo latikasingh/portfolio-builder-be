@@ -7,7 +7,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { UserResume } from './schema/resume.schema';
 import mongoose from 'mongoose';
 import { ErrorMessage } from 'shared/error.constant';
-import { getOne, upSertOne } from 'shared/helper/helperFunctions';
+import {
+  createOne,
+  deleteOne,
+  getAll,
+  getOne,
+  updateOne,
+} from 'shared/helper/helperFunctions';
 import { UpdateUserResumeDto } from './dto/update-resume.dto';
 import { CreateUserResumeDto } from './dto/create-resume.dto';
 
@@ -18,9 +24,49 @@ export class ResumeService {
     private UserResumeModel: mongoose.Model<UserResume>,
   ) {}
 
-  // Method for get UserResume by ID
+  // Method for get UserResumes by  user ID
+  async getUserResumesByUserId(
+    id: mongoose.Types.ObjectId,
+  ): Promise<UserResume[]> {
+    const userResume = await getAll(this.UserResumeModel, { user: id });
+
+    return userResume;
+  }
+
+  async getUserResumesByUserIdForPortfolio(
+    id: mongoose.Types.ObjectId,
+  ): Promise<UserResume[]> {
+    const userResumes = await this.UserResumeModel.aggregate([
+      { $match: { user: new mongoose.Types.ObjectId(id) } },
+      {
+        $group: {
+          _id: '$title',
+          data: {
+            $push: {
+              subtitle: '$subtitle',
+              description: '$description',
+              points: '$points',
+              startYear: '$startYear',
+              endYear: '$endYear',
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          title: '$_id',
+          _id: 0,
+          data: 1,
+        },
+      },
+    ]);
+
+    return userResumes;
+  }
+
+  // Method for get UserResumes by ID
   async getUserResumeById(id: mongoose.Types.ObjectId): Promise<UserResume> {
-    const userResume = await getOne(this.UserResumeModel, id, 'user');
+    const userResume = await getOne(this.UserResumeModel, id, '_id');
 
     if (!userResume) {
       throw new NotFoundException(ErrorMessage.USER_RESUME_NOT_FOUND);
@@ -28,31 +74,46 @@ export class ResumeService {
     return userResume;
   }
 
-  // Method for upsert UserResume
-  async upSertUserResume(
+  // Method for create UserResume
+  async createResume(
     userId: mongoose.Types.ObjectId,
-    data: CreateUserResumeDto | UpdateUserResumeDto,
-    type: 'create' | 'update',
-    id?: mongoose.Types.ObjectId,
+    data: CreateUserResumeDto,
   ): Promise<UserResume> {
-    let userResume;
+    const resume = await createOne(this.UserResumeModel, {
+      ...data,
+      user: userId,
+    });
 
-    if (type === 'create') {
-      userResume = await upSertOne(this.UserResumeModel, userId, {
-        ...data,
-        user: userId,
-      });
-    } else {
-      userResume = await upSertOne(this.UserResumeModel, id, data);
+    if (!resume) {
+      throw new BadRequestException(ErrorMessage.USER_RESUME_NOT_CREATE);
+    }
+    return resume;
+  }
+
+  // Method for update UserResume by ID
+  async updateResume(
+    userId: mongoose.Types.ObjectId,
+    data: UpdateUserResumeDto,
+    id: mongoose.Types.ObjectId,
+  ): Promise<UserResume> {
+    const resume = await updateOne(this.UserResumeModel, id, {
+      ...data,
+      user: userId,
+    });
+
+    if (!resume) {
+      throw new BadRequestException(ErrorMessage.USER_RESUME_NOT_UPDATED);
     }
 
-    if (!userResume) {
-      throw new BadRequestException(
-        type === 'create'
-          ? ErrorMessage.USER_RESUME_NOT_CREATE
-          : ErrorMessage.USER_RESUME_NOT_UPDATED,
-      );
+    return resume;
+  }
+
+  // Method for delete UserResume by ID
+  async deleteResume(id: mongoose.Types.ObjectId) {
+    const resume = await deleteOne(this.UserResumeModel, id);
+
+    if (!resume) {
+      throw new BadRequestException(ErrorMessage.USER_RESUME_NOT_UPDATED);
     }
-    return userResume;
   }
 }

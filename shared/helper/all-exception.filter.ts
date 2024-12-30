@@ -5,7 +5,6 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { ValidationError } from 'class-validator';
 import { Response } from 'express';
 
 @Catch()
@@ -16,7 +15,7 @@ export class AllExceptionFilter implements ExceptionFilter {
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let errorMessage = 'Internal server error';
-    console.log(exception);
+    // console.log(exception);
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       const responseObj = exception.getResponse();
@@ -44,6 +43,11 @@ export class AllExceptionFilter implements ExceptionFilter {
       errorMessage = exception.message;
     } else if (exception && typeof exception['message'] === 'string') {
       errorMessage = exception['message'];
+    } else {
+      console.error('Unexpected error:', exception);
+      errorMessage =
+        exception['message'] ||
+        'An unexpected error occurred. Please try again later.';
     }
 
     response.status(status).json({

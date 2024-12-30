@@ -10,7 +10,7 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
-  @Get('/protfolio/:id')
+  @Get('/portfolio/:id')
   getAllPortfolioData(@Param('id') id: mongoose.Types.ObjectId) {
     return this.appService.getAllPortfolioData(id);
   }

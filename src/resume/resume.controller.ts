@@ -1,7 +1,7 @@
 import {
-  BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -14,8 +14,7 @@ import { ResumeService } from './resume.service';
 import { AuthGuard } from 'shared/auth/auth.gurd';
 import { UserResume } from './schema/resume.schema';
 import { CreateUserResumeDto } from './dto/create-resume.dto';
-import { UpdateUserSkillDto } from 'src/skill/dto/update-skill.to';
-import { ErrorMessage } from 'shared/error.constant';
+import { UpdateUserResumeDto } from './dto/update-resume.dto';
 
 @Controller('user-resume')
 export class ResumeController {
@@ -23,8 +22,8 @@ export class ResumeController {
 
   @UseGuards(AuthGuard)
   @Get()
-  async getUserResume(@Req() req: any): Promise<UserResume> {
-    return await this.userResemeService.getUserResumeById(req.user.id);
+  async getUserResume(@Req() req: any): Promise<UserResume[]> {
+    return await this.userResemeService.getUserResumesByUserId(req.user.id);
   }
 
   @UseGuards(AuthGuard)
@@ -33,29 +32,24 @@ export class ResumeController {
     @Req() req: any,
     @Body() createData: CreateUserResumeDto,
   ): Promise<UserResume> {
-    return this.userResemeService.upSertUserResume(
-      req.user.id,
-      createData,
-      'create',
-    );
+    return this.userResemeService.createResume(req.user.id, createData);
   }
 
   @UseGuards(AuthGuard)
   @Patch(':id')
   async updateUserResume(
     @Req() req: any,
-    @Body() updateData: UpdateUserSkillDto,
+    @Body() updateData: UpdateUserResumeDto,
     @Param('id') id: mongoose.Types.ObjectId,
   ): Promise<UserResume> {
-    if (req.user.id !== id) {
-      throw new BadRequestException(ErrorMessage.INVALID_ID);
-    }
+    await this.userResemeService.getUserResumeById(id);
 
-    return this.userResemeService.upSertUserResume(
-      req.user.id,
-      updateData,
-      'update',
-      id,
-    );
+    return this.userResemeService.updateResume(req.user.id, updateData, id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete(':id')
+  async deleteUserResume(@Param('id') id: mongoose.Types.ObjectId) {
+    this.userResemeService.deleteResume(id);
   }
 }

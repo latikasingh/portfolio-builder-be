@@ -5,6 +5,7 @@ import {
   IsMongoId,
   IsNotEmpty,
   ArrayNotEmpty,
+  ValidateNested,
 } from 'class-validator';
 
 export class CreateUserResumeDto {
@@ -19,8 +20,8 @@ export class CreateUserResumeDto {
 
   @IsString({ each: true })
   @IsArray()
-  @ArrayNotEmpty()
-  points: string[];
+  @IsOptional()
+  points?: string[];
 
   @IsString()
   @IsOptional()
@@ -28,5 +29,5 @@ export class CreateUserResumeDto {
 
   @IsString()
   @IsOptional()
-  endYear: string;
+  endYear?: string;
 }

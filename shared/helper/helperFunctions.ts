@@ -19,7 +19,7 @@ export const getOneById = async <T>(
 export const getOne = async <T>(
   model: Model<T>,
   id: mongoose.Types.ObjectId,
-  key: string,
+  key?: string,
 ): Promise<T | null> => {
   const filter: FilterQuery<T> = { [key]: id } as FilterQuery<T>;
   return model.findOne(filter);
@@ -78,13 +78,9 @@ export const deleteOne = async (
   model: any,
   id: mongoose.Types.ObjectId,
 ): Promise<string | null> => {
-  const deletedUser = await model.findOneAndUpdate(
-    { _id: id, isActive: true },
-    { isActive: false },
-    { new: true },
-  );
+  const deleteData = await model.findByIdAndDelete(id);
 
-  if (!deletedUser)
+  if (!deleteData)
     throw new BadRequestException('Error while Delete operation ');
 
   return 'Delete Operation done successfully';
