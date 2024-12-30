@@ -19,15 +19,13 @@ export class SkillService {
   ) {}
 
   // Method for get UserSkill by ID
-  async getUserSkillById(
-    id: mongoose.Types.ObjectId,
-  ): Promise<{ userSkill: UserSkill }> {
+  async getUserSkillById(id: mongoose.Types.ObjectId): Promise<UserSkill> {
     const userSkill = await getOne(this.UserSkillModel, id, 'user');
 
     if (!userSkill) {
       throw new NotFoundException(ErrorMessage.USER_SKILL_NOT_FOUND);
     }
-    return { userSkill };
+    return userSkill;
   }
 
   // Method for upsert UserSKill
@@ -36,7 +34,7 @@ export class SkillService {
     data: CreateUserSkillDto | UpdateUserSkillDto,
     type: 'create' | 'update',
     id?: mongoose.Types.ObjectId,
-  ): Promise<{ userSkill: UserSkill }> {
+  ): Promise<UserSkill> {
     let userSkill;
 
     if (type === 'create') {
@@ -55,6 +53,6 @@ export class SkillService {
           : ErrorMessage.USER_SKILL_NOT_UPDATED,
       );
     }
-    return { userSkill };
+    return userSkill;
   }
 }

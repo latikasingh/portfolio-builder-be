@@ -23,7 +23,7 @@ export class ResumeController {
 
   @UseGuards(AuthGuard)
   @Get()
-  async getUserResume(@Req() req: any): Promise<{ userResume: UserResume }> {
+  async getUserResume(@Req() req: any): Promise<UserResume> {
     return await this.userResemeService.getUserResumeById(req.user.id);
   }
 
@@ -32,7 +32,7 @@ export class ResumeController {
   async createUserResume(
     @Req() req: any,
     @Body() createData: CreateUserResumeDto,
-  ): Promise<{ userResume: UserResume }> {
+  ): Promise<UserResume> {
     return this.userResemeService.upSertUserResume(
       req.user.id,
       createData,
@@ -46,7 +46,7 @@ export class ResumeController {
     @Req() req: any,
     @Body() updateData: UpdateUserSkillDto,
     @Param('id') id: mongoose.Types.ObjectId,
-  ): Promise<{ userResume: UserResume }> {
+  ): Promise<UserResume> {
     if (req.user.id !== id) {
       throw new BadRequestException(ErrorMessage.INVALID_ID);
     }

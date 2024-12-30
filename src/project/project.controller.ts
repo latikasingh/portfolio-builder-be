@@ -26,8 +26,15 @@ export class ProjectController {
 
   @UseGuards(AuthGuard)
   @Get()
-  async getUserProject(@Req() req: any): Promise<{ userProject: UserProject }> {
+  async getUserProject(@Req() req: any): Promise<UserProject[]> {
     return await this.userProjectService.getUserProjectById(req.user.id);
+  }
+
+  @Get(':id')
+  async getUserProjectById(
+    @Param('id') id: mongoose.Types.ObjectId,
+  ): Promise<UserProject[]> {
+    return await this.userProjectService.getUserProjectById(id);
   }
 
   @UseInterceptors(
@@ -39,11 +46,10 @@ export class ProjectController {
     @Req() req: any,
     @Body() createData: CreateUserProjectDto,
     @UploadedFiles() files?: { projectImages?: Express.Multer.File[] },
-  ): Promise<{ userProject: UserProject }> {
-    return this.userProjectService.upSertUserProject(
+  ): Promise<UserProject> {
+    return this.userProjectService.createPorject(
       req.user.id,
       createData,
-      'create',
       files,
     );
   }
@@ -58,17 +64,16 @@ export class ProjectController {
     @Body() updateData: UpdateUserProjectDto,
     @Param('id') id: mongoose.Types.ObjectId,
     @UploadedFiles() files?: { projectImages?: Express.Multer.File[] },
-  ): Promise<{ userProject: UserProject }> {
+  ): Promise<UserProject> {
     if (req.user.id !== id) {
       throw new BadRequestException(ErrorMessage.INVALID_ID);
     }
 
-    return this.userProjectService.upSertUserProject(
+    return this.userProjectService.updatePorject(
       req.user.id,
       updateData,
-      'update',
-      files,
       id,
+      files,
     );
   }
 }

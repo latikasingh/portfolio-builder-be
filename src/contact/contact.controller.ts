@@ -13,7 +13,7 @@ import { UserContact } from './schema/contact.schema';
 import { AuthGuard } from 'shared/auth/auth.gurd';
 import { CreateUserContactDto } from './dto/create-contact.dto';
 
-@Controller('contact')
+@Controller('user-contact')
 export class ContactController {
   constructor(private userContactService: ContactService) {}
 
@@ -27,7 +27,7 @@ export class ContactController {
 
   @Post(':id')
   async createUserAbout(
-    @Param('id') id: string,
+    @Param('id') id: mongoose.Types.ObjectId,
     @Body() createData: CreateUserContactDto,
   ): Promise<{ userContact: UserContact }> {
     return this.userContactService.addUserContact(createData, id);

@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
-import { Degree } from 'shared/enum/degree.enum';
 
 @Schema()
 export class UserAbout extends Document {
@@ -22,11 +21,11 @@ export class UserAbout extends Document {
   @Prop({ required: true })
   age: number;
 
-  @Prop({ required: true })
+  @Prop()
   website: string;
 
-  @Prop({ enum: Degree, required: true })
-  degree: Degree;
+  @Prop({ required: true })
+  degree: string;
 
   @Prop({ required: true })
   phone: string;
@@ -38,7 +37,7 @@ export class UserAbout extends Document {
   freelancer: boolean;
 
   @Prop({ default: 0 })
-  happilyClient: number;
+  happyClient: number;
 
   @Prop({ default: 0 })
   projects: number;

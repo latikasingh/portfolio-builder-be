@@ -1,12 +1,8 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import mongoose from 'mongoose';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserProject } from './schema/project.schema';
-import mongoose from 'mongoose';
-import { getOne, updateOne, upSertOne } from 'shared/helper/helperFunctions';
+import { createOne, getAll, updateOne } from 'shared/helper/helperFunctions';
 import { ErrorMessage } from 'shared/error.constant';
 import { UpdateUserProjectDto } from './dto/update-project.dto';
 import { CreateUserProjectDto } from './dto/create-project.dto';
@@ -23,24 +19,18 @@ export class ProjectService {
   // Method for get UserProject by ID
   async getUserProjectById(
     id: mongoose.Types.ObjectId,
-  ): Promise<{ userProject: UserProject }> {
-    const userProject = await getOne(this.UserProjectModel, id, 'user');
-    if (!userProject) {
-      throw new NotFoundException(ErrorMessage.USER_PROJECT_NOT_FOUND);
-    }
-    return { userProject };
+  ): Promise<UserProject[]> {
+    const userProject = await getAll(this.UserProjectModel, { user: id });
+
+    return userProject;
   }
 
-  // Method for upsert UserProject
-  async upSertUserProject(
+  // Method for create UserProject
+  async createPorject(
     userId: mongoose.Types.ObjectId,
     data: CreateUserProjectDto | UpdateUserProjectDto,
-    type: 'create' | 'update',
     files?: any,
-    id?: mongoose.Types.ObjectId,
-  ): Promise<{ userProject: UserProject }> {
-    let userProject;
-
+  ) {
     if (files?.projectImages && files.projectImages.length > 0) {
       const uploadedImages = await Promise.all(
         files.projectImages.map(async (image) => {
@@ -51,22 +41,43 @@ export class ProjectService {
       data.projectImages = uploadedImages;
     }
 
-    if (type === 'create') {
-      userProject = await upSertOne(this.UserProjectModel, userId, {
-        ...data,
-        user: userId,
-      });
-    } else {
-      userProject = await upSertOne(this.UserProjectModel, id, data);
+    const project = await createOne(this.UserProjectModel, {
+      ...data,
+      user: userId,
+    });
+
+    if (!project) {
+      throw new BadRequestException(ErrorMessage.USER_PROJECT_NOT_CREATE);
+    }
+    return project;
+  }
+
+  // Method for update UserProject by ID
+  async updatePorject(
+    userId: mongoose.Types.ObjectId,
+    data: CreateUserProjectDto | UpdateUserProjectDto,
+    id: mongoose.Types.ObjectId,
+    files?: any,
+  ) {
+    if (files?.projectImages && files.projectImages.length > 0) {
+      const uploadedImages = await Promise.all(
+        files.projectImages.map(async (image) => {
+          return this.cloudinaryService.uploadImage(image);
+        }),
+      );
+
+      data.projectImages = uploadedImages;
     }
 
-    if (!userProject) {
-      throw new BadRequestException(
-        type === 'create'
-          ? ErrorMessage.USER_PROJECT_NOT_CREATE
-          : ErrorMessage.USER_PROJECT_NOT_UPDATED,
-      );
+    const project = await updateOne(this.UserProjectModel, id, {
+      ...data,
+      user: userId,
+    });
+
+    if (!project) {
+      throw new BadRequestException(ErrorMessage.USER_PROJECT_NOT_UPDATED);
     }
-    return { userProject };
+
+    return project;
   }
 }

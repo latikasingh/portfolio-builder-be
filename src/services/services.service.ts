@@ -19,15 +19,13 @@ export class ServicesService {
   ) {}
 
   // Method for get UserService by ID
-  async getUserServiceById(
-    id: mongoose.Types.ObjectId,
-  ): Promise<{ userService: UserService }> {
+  async getUserServiceById(id: mongoose.Types.ObjectId): Promise<UserService> {
     const userService = await getOne(this.UserServiceModel, id, 'user');
 
     if (!userService) {
       throw new NotFoundException(ErrorMessage.USER_SERVICE_NOT_FOUND);
     }
-    return { userService };
+    return userService;
   }
 
   // Method for upsert UserSKill
@@ -36,7 +34,7 @@ export class ServicesService {
     data: CreateUserServiceDto | UpdateUserServiceDto,
     type: 'create' | 'update',
     id?: mongoose.Types.ObjectId,
-  ): Promise<{ userService: UserService }> {
+  ): Promise<UserService> {
     let userService;
 
     if (type === 'create') {
@@ -55,6 +53,6 @@ export class ServicesService {
           : ErrorMessage.USER_SERVICE_NOT_UPDATED,
       );
     }
-    return { userService };
+    return userService;
   }
 }

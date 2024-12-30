@@ -23,7 +23,7 @@ export class ServicesController {
 
   @UseGuards(AuthGuard)
   @Get()
-  async getUserService(@Req() req: any): Promise<{ userService: UserService }> {
+  async getUserService(@Req() req: any): Promise<UserService> {
     return await this.userServiceService.getUserServiceById(req.user.id);
   }
 
@@ -32,7 +32,7 @@ export class ServicesController {
   async createUserAbout(
     @Req() req: any,
     @Body() createData: CreateUserServiceDto,
-  ): Promise<{ userService: UserService }> {
+  ): Promise<UserService> {
     return this.userServiceService.upSertUserService(
       req.user.id,
       createData,
@@ -46,7 +46,7 @@ export class ServicesController {
     @Req() req: any,
     @Body() updateData: UpdateUserServiceDto,
     @Param('id') id: mongoose.Types.ObjectId,
-  ): Promise<{ userService: UserService }> {
+  ): Promise<UserService> {
     if (req.user.id !== id) {
       throw new BadRequestException(ErrorMessage.INVALID_ID);
     }

@@ -25,14 +25,8 @@ export class UserAboutService {
   ) {}
 
   // Method for get UserAbout by ID
-  async getUserAboutById(
-    id: mongoose.Types.ObjectId,
-  ): Promise<{ userAbout: UserAbout }> {
-    const userAbout = await getOne(this.UserAboutModel, id, 'user');
-    if (!userAbout) {
-      throw new NotFoundException(ErrorMessage.USER_ABOUT_NOT_FOUND);
-    }
-    return { userAbout };
+  async getUserAboutById(id: mongoose.Types.ObjectId): Promise<UserAbout> {
+    return await getOne(this.UserAboutModel, id, 'user');
   }
 
   // Method for upsert UserAbout
@@ -41,10 +35,13 @@ export class UserAboutService {
     data: CreateUserAboutDto | UpdateUserAboutDto,
     type: 'create' | 'update',
     id?: mongoose.Types.ObjectId,
-  ): Promise<{ userAbout: UserAbout }> {
+  ): Promise<UserAbout> {
     let userAbout;
 
-    data.age = calculateAge(data.DOB);
+    if (!data.age) {
+      data.age = calculateAge(data.DOB);
+    }
+
     if (type === 'create') {
       userAbout = await upSertOne(this.UserAboutModel, userId, {
         ...data,
@@ -61,6 +58,6 @@ export class UserAboutService {
           : ErrorMessage.USER_ABOUT_NOT_UPDATED,
       );
     }
-    return { userAbout };
+    return userAbout;
   }
 }

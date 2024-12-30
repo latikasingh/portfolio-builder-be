@@ -19,15 +19,13 @@ export class ResumeService {
   ) {}
 
   // Method for get UserResume by ID
-  async getUserResumeById(
-    id: mongoose.Types.ObjectId,
-  ): Promise<{ userResume: UserResume }> {
+  async getUserResumeById(id: mongoose.Types.ObjectId): Promise<UserResume> {
     const userResume = await getOne(this.UserResumeModel, id, 'user');
 
     if (!userResume) {
       throw new NotFoundException(ErrorMessage.USER_RESUME_NOT_FOUND);
     }
-    return { userResume };
+    return userResume;
   }
 
   // Method for upsert UserResume
@@ -36,7 +34,7 @@ export class ResumeService {
     data: CreateUserResumeDto | UpdateUserResumeDto,
     type: 'create' | 'update',
     id?: mongoose.Types.ObjectId,
-  ): Promise<{ userResume: UserResume }> {
+  ): Promise<UserResume> {
     let userResume;
 
     if (type === 'create') {
@@ -55,6 +53,6 @@ export class ResumeService {
           : ErrorMessage.USER_RESUME_NOT_UPDATED,
       );
     }
-    return { userResume };
+    return userResume;
   }
 }

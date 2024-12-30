@@ -29,7 +29,7 @@ export class ContactService {
   // Method for add UserContact data
   async addUserContact(
     data: CreateUserContactDto,
-    userId: string,
+    userId: mongoose.Types.ObjectId,
   ): Promise<{ userContact: UserContact }> {
     const userContact = await createOne(this.UserContactModel, {
       ...data,

@@ -10,6 +10,7 @@ export class UserSkill extends Document {
 
   @Prop({ required: true })
   description: string;
+
   @Prop({
     type: [UserSkillData],
     required: true,

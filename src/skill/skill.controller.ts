@@ -23,7 +23,7 @@ export class SkillController {
 
   @UseGuards(AuthGuard)
   @Get()
-  async getUserSkill(@Req() req: any): Promise<{ userSkill: UserSkill }> {
+  async getUserSkill(@Req() req: any): Promise<UserSkill> {
     return await this.userSkillService.getUserSkillById(req.user.id);
   }
 
@@ -32,7 +32,7 @@ export class SkillController {
   async createUserAbout(
     @Req() req: any,
     @Body() createData: CreateUserSkillDto,
-  ): Promise<{ userSkill: UserSkill }> {
+  ): Promise<UserSkill> {
     return this.userSkillService.upSertUserSkill(
       req.user.id,
       createData,
@@ -46,7 +46,7 @@ export class SkillController {
     @Req() req: any,
     @Body() updateData: UpdateUserSkillDto,
     @Param('id') id: mongoose.Types.ObjectId,
-  ): Promise<{ userSkill: UserSkill }> {
+  ): Promise<UserSkill> {
     if (req.user.id !== id) {
       throw new BadRequestException(ErrorMessage.INVALID_ID);
     }

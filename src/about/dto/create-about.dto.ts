@@ -1,14 +1,13 @@
+import { Transform } from 'class-transformer';
 import {
   IsString,
   IsNotEmpty,
   IsNumber,
   IsOptional,
-  IsEnum,
   IsBoolean,
   IsUrl,
+  ValidateIf,
 } from 'class-validator';
-import { Degree } from 'shared/enum/degree.enum';
-import { Transform } from 'class-transformer';
 
 export class CreateUserAboutDto {
   @IsString()
@@ -28,17 +27,17 @@ export class CreateUserAboutDto {
   DOB: string;
 
   @IsNumber()
+  @Transform(({ value }) => Number(value))
   @IsNotEmpty()
   age: number;
 
+  @ValidateIf((o) => o.link !== '')
   @IsUrl()
-  @IsNotEmpty()
+  @IsOptional()
   website: string;
 
-  @IsEnum(Degree)
   @IsNotEmpty()
-  @Transform(({ value }) => value.toLowerCase())
-  degree: Degree;
+  degree: string;
 
   @IsString()
   @IsNotEmpty()
@@ -52,18 +51,23 @@ export class CreateUserAboutDto {
   @IsOptional()
   freelancer?: boolean;
 
+  @Transform(({ value }) => Number(value))
   @IsNumber()
   @IsOptional()
-  happilyClient?: number;
+  happyClient?: number;
 
   @IsNumber()
+  @Transform(({ value }) => Number(value))
   @IsOptional()
   projects?: number;
+
   @IsNumber()
+  @Transform(({ value }) => Number(value))
   @IsOptional()
   hoursOfSupports?: number;
 
   @IsNumber()
+  @Transform(({ value }) => Number(value))
   @IsOptional()
   team?: number;
 }
