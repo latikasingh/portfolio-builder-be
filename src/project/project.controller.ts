@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
@@ -17,7 +16,6 @@ import { CreateUserProjectDto } from './dto/create-project.dto';
 import { AuthGuard } from 'shared/auth/auth.gurd';
 import { UserProject } from './schema/project.schema';
 import { UpdateUserProjectDto } from './dto/update-project.dto';
-import { ErrorMessage } from 'shared/error.constant';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 @Controller('user-project')
@@ -27,13 +25,13 @@ export class ProjectController {
   @UseGuards(AuthGuard)
   @Get()
   async getUserProject(@Req() req: any): Promise<UserProject[]> {
-    return await this.userProjectService.getUserProjectById(req.user.id);
+    return await this.userProjectService.getUserProjectByUserId(req.user.id);
   }
 
   @Get(':id')
   async getUserProjectById(
     @Param('id') id: mongoose.Types.ObjectId,
-  ): Promise<UserProject[]> {
+  ): Promise<UserProject> {
     return await this.userProjectService.getUserProjectById(id);
   }
 
@@ -65,9 +63,7 @@ export class ProjectController {
     @Param('id') id: mongoose.Types.ObjectId,
     @UploadedFiles() files?: { projectImages?: Express.Multer.File[] },
   ): Promise<UserProject> {
-    if (req.user.id !== id) {
-      throw new BadRequestException(ErrorMessage.INVALID_ID);
-    }
+    await this.userProjectService.getUserProjectById(id);
 
     return this.userProjectService.updatePorject(
       req.user.id,

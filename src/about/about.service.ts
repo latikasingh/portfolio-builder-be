@@ -38,7 +38,7 @@ export class UserAboutService {
   ): Promise<UserAbout> {
     let userAbout;
 
-    if (!data.age) {
+    if (!data.age && data.DOB) {
       data.age = calculateAge(data.DOB);
     }
 

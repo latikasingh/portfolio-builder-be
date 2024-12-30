@@ -22,9 +22,6 @@ export class ServicesService {
   async getUserServiceById(id: mongoose.Types.ObjectId): Promise<UserService> {
     const userService = await getOne(this.UserServiceModel, id, 'user');
 
-    if (!userService) {
-      throw new NotFoundException(ErrorMessage.USER_SERVICE_NOT_FOUND);
-    }
     return userService;
   }
 

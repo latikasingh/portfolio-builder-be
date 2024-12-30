@@ -7,6 +7,7 @@ import {
   IsBoolean,
   IsUrl,
   ValidateIf,
+  Length,
 } from 'class-validator';
 
 export class CreateUserAboutDto {
@@ -41,6 +42,7 @@ export class CreateUserAboutDto {
 
   @IsString()
   @IsNotEmpty()
+  @Length(10, 10)
   phone: string;
 
   @IsString()

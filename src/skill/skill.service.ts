@@ -22,9 +22,6 @@ export class SkillService {
   async getUserSkillById(id: mongoose.Types.ObjectId): Promise<UserSkill> {
     const userSkill = await getOne(this.UserSkillModel, id, 'user');
 
-    if (!userSkill) {
-      throw new NotFoundException(ErrorMessage.USER_SKILL_NOT_FOUND);
-    }
     return userSkill;
   }
 
