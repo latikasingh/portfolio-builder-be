@@ -9,10 +9,14 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request as Req } from 'express';
 import { ErrorMessage } from 'shared/error.constant';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private userService: UserService,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     // Extract the JWT token from the request header.
@@ -20,6 +24,12 @@ export class AuthGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
     if (!token || token === 'null') {
       throw new UnauthorizedException(ErrorMessage.UNAUTHORIZED_ACCESS);
+    }
+
+    // Check if token is in the blocklist
+    const isBlocked = await this.userService.isTokenBlocked(token);
+    if (isBlocked) {
+      throw new UnauthorizedException(ErrorMessage.REVOKE_TOKEN);
     }
 
     let payload;

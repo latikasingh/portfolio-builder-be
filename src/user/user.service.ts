@@ -20,6 +20,7 @@ import { SignInUserDto } from './dto/sign-in.dto';
 import { ErrorMessage } from 'shared/error.constant';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { Token } from './schema/token.schema';
 
 @Injectable()
 export class UserService {
@@ -27,6 +28,7 @@ export class UserService {
     private jwtService: JwtService,
     private cloudinaryService: CloudinaryService,
     @InjectModel(User.name) private UserModel: mongoose.Model<User>,
+    @InjectModel(Token.name) private TokenModel: mongoose.Model<Token>,
   ) {}
 
   // Method for creation token
@@ -159,7 +161,16 @@ export class UserService {
   }
 
   async logout(token: string) {
-    const decodedToken = this.jwtService.decode(token);
-    const jti = decodedToken['jti'];
+    const payload = await this.jwtService.verifyAsync(token, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+
+    const expiresAt = new Date(payload.exp * 1000);
+    createOne(this.TokenModel, { token, expiresAt });
+  }
+
+  async isTokenBlocked(token: string): Promise<boolean> {
+    const blockedToken = await this.TokenModel.findOne({ token });
+    return !!blockedToken;
   }
 }

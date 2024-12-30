@@ -78,7 +78,8 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Post('/logout')
-  async logOut() {
-    return true;
+  logOut(@Req() req: any) {
+    const token = req.headers.authorization?.split(' ')[1];
+    this.userService.logout(token);
   }
 }

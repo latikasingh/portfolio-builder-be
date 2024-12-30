@@ -23,6 +23,7 @@ export const ErrorMessage = {
   INVALID_CREDENTIALS: 'Invalid email or password!',
   INVALID_TOKEN: 'The token is invalid!',
   EXPIRED_TOKEN: 'Token expired!',
+  REVOKE_TOKEN: 'Token is invalid or has been revoked',
   UNAUTHORIZED_ACCESS: 'Unauthorized access!',
   INVALID_ID: 'Please provide valid ID!',
   PASSWORD_CHANGE_NOT_ALLOWED: 'You can not directly change password',
