@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import {
   IsString,
   IsNotEmpty,
@@ -6,28 +7,31 @@ import {
   ValidateIf,
   IsArray,
   ArrayNotEmpty,
+  IsEnum,
 } from 'class-validator';
+import { ProjectType } from 'shared/enum/project-type.enum';
 
 export class CreateUserProjectDto {
+  @IsEnum(ProjectType, {
+    message: 'Type must be one of: App, Product, Book, Branding',
+  })
+  @Transform(({ value }) => value.toLowerCase())
   @IsString()
   @IsNotEmpty()
   type: string;
 
-  @IsString()
   @IsNotEmpty()
+  @IsString()
   name: string;
 
   @IsString()
   @IsNotEmpty()
-  description_title: string;
+  descriptionTitle: string;
 
   @IsString()
   @IsNotEmpty()
   description: string;
 
-  @IsUrl({}, { each: true })
-  @IsArray()
-  @ArrayNotEmpty()
   @IsOptional()
   projectImages?: string[];
 

@@ -53,6 +53,46 @@ export class ResumeService {
         },
       },
       {
+        $addFields: {
+          dataLength: { $size: '$data' },
+          pointsLength: {
+            $sum: {
+              $map: {
+                input: '$data',
+                as: 'item',
+                in: { $size: '$$item.points' },
+              },
+            },
+          },
+          earliestStartYear: { $min: '$data.startYear' },
+          latestEndYear: { $max: '$data.endYear' },
+        },
+      },
+      {
+        $addFields: {
+          data: {
+            $map: {
+              input: {
+                $sortArray: {
+                  input: '$data',
+                  sortBy: { startYear: -1, endYear: -1 },
+                },
+              },
+              as: 'item',
+              in: '$$item',
+            },
+          },
+        },
+      },
+      {
+        $sort: {
+          earliestStartYear: 1,
+          latestEndYear: 1,
+          dataLength: -1,
+          pointsLength: -1,
+        },
+      },
+      {
         $project: {
           title: '$_id',
           _id: 0,
@@ -113,7 +153,7 @@ export class ResumeService {
     const resume = await deleteOne(this.UserResumeModel, id);
 
     if (!resume) {
-      throw new BadRequestException(ErrorMessage.USER_RESUME_NOT_UPDATED);
+      throw new BadRequestException(ErrorMessage.USER_RESUME_NOT_DELETED);
     }
   }
 }

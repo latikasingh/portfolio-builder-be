@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -71,5 +72,11 @@ export class ProjectController {
       id,
       files,
     );
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete(':id')
+  async deleteUserProject(@Param('id') id: mongoose.Types.ObjectId) {
+    this.userProjectService.deleteProject(id);
   }
 }

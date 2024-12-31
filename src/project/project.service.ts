@@ -8,6 +8,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { UserProject } from './schema/project.schema';
 import {
   createOne,
+  deleteOne,
   getAll,
   getOne,
   updateOne,
@@ -79,24 +80,38 @@ export class ProjectService {
     files?: any,
   ) {
     if (files?.projectImages && files.projectImages.length > 0) {
+      data.projectImages = data.projectImages
+        ? Array.isArray(data.projectImages)
+          ? data.projectImages
+          : [data.projectImages]
+        : [];
+
       const uploadedImages = await Promise.all(
         files.projectImages.map(async (image) => {
           return this.cloudinaryService.uploadImage(image);
         }),
       );
 
-      data.projectImages = uploadedImages;
+      data.projectImages.push(...uploadedImages);
     }
 
     const project = await updateOne(this.UserProjectModel, id, {
       ...data,
       user: userId,
     });
-
     if (!project) {
       throw new BadRequestException(ErrorMessage.USER_PROJECT_NOT_UPDATED);
     }
 
     return project;
+  }
+
+  // Method for delete UserProject by ID
+  async deleteProject(id: mongoose.Types.ObjectId) {
+    const resume = await deleteOne(this.UserProjectModel, id);
+
+    if (!resume) {
+      throw new BadRequestException(ErrorMessage.USER_PROJECT_NOT_DELETED);
+    }
   }
 }

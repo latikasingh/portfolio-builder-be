@@ -1,19 +1,20 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { ProjectType } from 'shared/enum/project-type.enum';
 
 @Schema()
 export class UserProject extends Document {
   @Prop({ required: true })
   user: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, enum: ProjectType })
   type: string;
 
   @Prop({ required: true })
   name: string;
 
   @Prop({ required: true })
-  description_title: string;
+  descriptionTitle: string;
 
   @Prop({ required: true })
   description: string;
