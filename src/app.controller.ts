@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { AppService } from './app.service';
 import mongoose from 'mongoose';
 
@@ -13,5 +13,12 @@ export class AppController {
   @Get('/portfolio/:id')
   getAllPortfolioData(@Param('id') id: mongoose.Types.ObjectId) {
     return this.appService.getAllPortfolioData(id);
+  }
+
+  @Get('/icons/search')
+  async getSearchIcon(
+    @Query('name') name: string,
+  ): Promise<{ icons: { icon: any; value: string }[] }> {
+    return await this.appService.searchIcon(name);
   }
 }

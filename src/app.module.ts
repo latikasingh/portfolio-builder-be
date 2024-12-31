@@ -12,6 +12,7 @@ import { AboutModule } from './about/about.module';
 import { ServicesModule } from './services/services.module';
 import { ProjectModule } from './project/project.module';
 import { ContactModule } from './contact/contact.module';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ContactModule } from './contact/contact.module';
       signOptions: { expiresIn: process.env.JWT_TOKEN_EXPIRESIN },
     }),
     MongooseModule.forRoot(process.env.MONGODB_URL),
+    HttpModule,
     UserModule,
     AboutModule,
     SkillModule,
