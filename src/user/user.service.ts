@@ -39,6 +39,14 @@ export class UserService {
     return token;
   }
 
+  async setTheme(id: string, userId: string): Promise<{ user: User }> {
+    const user = await this.UserModel.findById(userId);
+    const updatedData = await user.updateOne({
+      theme: id,
+    });
+    return updatedData;
+  }
+
   // Method to handle user signup
   async signup(
     userData: SignUpUserDto,

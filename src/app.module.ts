@@ -13,6 +13,7 @@ import { ServicesModule } from './services/services.module';
 import { ProjectModule } from './project/project.module';
 import { ContactModule } from './contact/contact.module';
 import { HttpModule } from '@nestjs/axios';
+import { ThemesSchema } from './user/schema/themes.schema';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { HttpModule } from '@nestjs/axios';
       secret: process.env.JWT_SECRET_KEY,
       signOptions: { expiresIn: process.env.JWT_TOKEN_EXPIRESIN },
     }),
+    MongooseModule.forFeature([{ name: 'Themes', schema: ThemesSchema }]),
     MongooseModule.forRoot(process.env.MONGODB_URL),
     HttpModule,
     UserModule,

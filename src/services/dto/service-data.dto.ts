@@ -12,4 +12,8 @@ export class UserServiceDataDto {
   @IsString()
   @IsNotEmpty()
   description: string;
+
+  @IsString()
+  @IsNotEmpty()
+  svg: string;
 }

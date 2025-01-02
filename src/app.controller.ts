@@ -1,15 +1,43 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import mongoose from 'mongoose';
+import { AuthGuard } from 'shared/auth/auth.gurd';
+import { UserService } from './user/user.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private userService: UserService,
+  ) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @UseGuards(AuthGuard)
+  @Get('/theme')
+  getCurrentTheme(@Req() req: any) {
+    return this.appService.getCurrentTheme(req.user.id);
   }
+
+  @UseGuards(AuthGuard)
+  @Patch('/theme')
+  setTheme(@Req() req: any, @Body('id') id: string) {
+    return this.userService.setTheme(id, req.user.id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/themes')
+  getAllThemes() {
+    return this.appService.getAllThemes();
+  }
+
   @Get('/portfolio/:id')
   getAllPortfolioData(@Param('id') id: mongoose.Types.ObjectId) {
     return this.appService.getAllPortfolioData(id);

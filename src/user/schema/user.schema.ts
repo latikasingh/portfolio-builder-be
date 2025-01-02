@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { SocialMediaSchema } from './social-media.schema';
 import * as crypto from 'crypto';
@@ -36,6 +36,14 @@ export class User extends Document {
       'https://res.cloudinary.com/drp14sj0v/image/upload/v1735281637/Profile_Image.png',
   })
   profileImage?: string;
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Themes',
+    required: true,
+    default: '677633f586840bf56725a510',
+  })
+  theme: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

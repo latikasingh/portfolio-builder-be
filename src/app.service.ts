@@ -7,6 +7,8 @@ import { ProjectService } from './project/project.service';
 import { ServicesService } from './services/services.service';
 import mongoose from 'mongoose';
 import { HttpService } from '@nestjs/axios';
+import { InjectModel } from '@nestjs/mongoose';
+import { Themes } from './user/schema/themes.schema';
 
 @Injectable()
 export class AppService {
@@ -18,6 +20,7 @@ export class AppService {
     private userProjectService: ProjectService,
     private userServiceService: ServicesService,
     private httpService: HttpService,
+    @InjectModel(Themes.name) private ThemesModel: mongoose.Model<Themes>,
   ) {}
 
   getHello(): string {
@@ -34,6 +37,18 @@ export class AppService {
       this.userServiceService.getUserServiceById(userId),
     ]);
     return { data: { ...user, about, skill, resume, portfolio, service } };
+  }
+
+  async getCurrentTheme(userId: mongoose.Types.ObjectId) {
+    const theme = this.ThemesModel.findOne({ user: userId });
+    return theme;
+  }
+
+  async getAllThemes() {
+    const themes = await this.ThemesModel.find();
+    console.log(themes);
+
+    return themes;
   }
 
   async searchIcon(

@@ -9,4 +9,7 @@ export class UserServiceData {
 
   @Prop({ required: true })
   title: string;
+
+  @Prop({ required: true })
+  svg: string;
 }
