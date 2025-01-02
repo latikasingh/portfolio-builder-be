@@ -21,9 +21,9 @@ export class AppController {
   ) {}
 
   @UseGuards(AuthGuard)
-  @Get('/theme')
-  getCurrentTheme(@Req() req: any) {
-    return this.appService.getCurrentTheme(req.user.id);
+  @Get('/theme/:id')
+  getCurrentTheme(@Param('id') id: string) {
+    return this.userService.getCurrentTheme(id);
   }
 
   @UseGuards(AuthGuard)

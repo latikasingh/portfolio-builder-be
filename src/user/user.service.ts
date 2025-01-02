@@ -21,6 +21,7 @@ import { ErrorMessage } from 'shared/error.constant';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { Token } from './schema/token.schema';
+import { Themes } from './schema/themes.schema';
 
 @Injectable()
 export class UserService {
@@ -28,6 +29,7 @@ export class UserService {
     private jwtService: JwtService,
     private cloudinaryService: CloudinaryService,
     @InjectModel(User.name) private UserModel: mongoose.Model<User>,
+    @InjectModel(Themes.name) private ThemesModel: mongoose.Model<Themes>,
     @InjectModel(Token.name) private TokenModel: mongoose.Model<Token>,
   ) {}
 
@@ -39,12 +41,21 @@ export class UserService {
     return token;
   }
 
-  async setTheme(id: string, userId: string): Promise<{ user: User }> {
+  async getCurrentTheme(userId: string) {
     const user = await this.UserModel.findById(userId);
-    const updatedData = await user.updateOne({
-      theme: id,
-    });
-    return updatedData;
+    const theme = await this.ThemesModel.findById(user.theme);
+
+    return theme;
+  }
+
+  async setTheme(id: string, userId: string): Promise<{ user: User }> {
+    const updatedUser = await this.UserModel.findOneAndUpdate(
+      { _id: userId },
+      { theme: id },
+      { new: true },
+    );
+
+    return { user: updatedUser };
   }
 
   // Method to handle user signup

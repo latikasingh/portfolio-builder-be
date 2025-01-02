@@ -39,11 +39,6 @@ export class AppService {
     return { data: { ...user, about, skill, resume, portfolio, service } };
   }
 
-  async getCurrentTheme(userId: mongoose.Types.ObjectId) {
-    const theme = this.ThemesModel.findOne({ user: userId });
-    return theme;
-  }
-
   async getAllThemes() {
     const themes = await this.ThemesModel.find();
     console.log(themes);

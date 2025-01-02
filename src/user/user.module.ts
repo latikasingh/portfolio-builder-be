@@ -5,6 +5,7 @@ import { UserSchema } from './schema/user.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 import { TokenSchema } from './schema/token.schema';
+import { ThemesSchema } from './schema/themes.schema';
 
 @Global()
 @Module({
@@ -12,6 +13,7 @@ import { TokenSchema } from './schema/token.schema';
     MongooseModule.forFeature([
       { name: 'User', schema: UserSchema },
       { name: 'Token', schema: TokenSchema },
+      { name: 'Themes', schema: ThemesSchema },
     ]),
     CloudinaryModule,
   ],
